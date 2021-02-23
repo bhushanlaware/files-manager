@@ -1,5 +1,6 @@
 import { Button, Container, CssBaseline } from "@material-ui/core";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
+import { Home as HomeIcon } from "@material-ui/icons";
 import { useSnackbar } from "notistack";
 import React, { Fragment, useEffect, useState } from "react";
 import {
@@ -10,12 +11,7 @@ import {
 import AppBar from "./Components/AppBar";
 import Home from "./Containers/Home";
 import * as serviceWorker from "./serviceWorker";
-import BluePink from "./Themes/BluePink";
-import CyonYellow from "./Themes/CyonYellow";
 import RedBlue from "./Themes/RedBlue";
-import VehicleActivity from "./Containers/VehicleActivity";
-import PlaceInteractions from "./Containers/PlaceInteractions";
-import { DirectionsCar, Home as HomeIcon, LocationOnSharp } from "@material-ui/icons";
 
 function App() {
   const [darkMode, setDarkMode] = useState(false);
@@ -101,18 +97,6 @@ function App() {
       icon: <HomeIcon />,
       component: Home,
     },
-    {
-      title: 'Place Interactions',
-      url: '/place-interactions',
-      icon: <LocationOnSharp />,
-      component: PlaceInteractions,
-    },
-    {
-      title: 'Vehicle Activity',
-      url: '/vehicle-activity',
-      icon: <DirectionsCar />,
-      component: VehicleActivity,
-    }
   ]
   const getComopnent = (C) => <C menu={menu.map(x => ({ ...x, component: null }))}></C>
   return (
