@@ -6,7 +6,7 @@ const getFilesCreatedIn = async (req, res, next) => {
   }
   catch (error) {
     console.error(error);
-    res.send(500);
+    res.status(500).send('Internal Server Error');
   }
 }
 const getAllFiles = async (req, res, next) => {
@@ -15,7 +15,7 @@ const getAllFiles = async (req, res, next) => {
     res.send(result);
   } catch (error) {
     console.error(error);
-    res.send(500);
+    res.status(500).send('Internal Server Error');
   }
 
 }

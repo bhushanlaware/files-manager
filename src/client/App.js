@@ -15,7 +15,6 @@ import RedBlue from "./Themes/RedBlue";
 
 function App() {
   const [darkMode, setDarkMode] = useState(false);
-  const [newVersionAvailable, setNewVersionAvailable] = useState(false);
   const [waitingWorker, setWaitingWorker] = useState({});
   const { enqueueSnackbar } = useSnackbar();
 
@@ -30,28 +29,12 @@ function App() {
     [darkMode]
   );
 
-  const onServiceWorkerUpdate = (registration) => {
-    console.log("onServiceWorkerUpdate");
-    setNewVersionAvailable(true);
-    setWaitingWorker(registration && registration.waiting);
-    if (newVersionAvailable)
-      //show snackbar with refresh button
-      enqueueSnackbar("A new version is avaible", {
-        persist: true,
-        variant: "success",
-        action: refreshAction(),
-      });
-  };
-
   const updateServiceWorker = () => {
-    console.log("updateServiceWorker");
     waitingWorker && waitingWorker.postMessage({ type: "SKIP_WAITING" });
-    setNewVersionAvailable(false);
     window.location.reload();
   };
 
-  const refreshAction = (key) => {
-    //render the snackbar button
+  const refreshAction = () => {
     return (
       <Fragment>
         <Button
@@ -64,32 +47,30 @@ function App() {
       </Fragment>
     );
   };
+
+  const onServiceWorkerUpdate = (registration) => {
+    setWaitingWorker(registration && registration.waiting);
+    enqueueSnackbar("A new version is available", {
+      persist: true,
+      variant: "success",
+      action: refreshAction(),
+    });
+  };
+
   useEffect(() => {
-    console.log("Regstering..");
     serviceWorker.register({ onUpdate: onServiceWorkerUpdate });
   }, []);
 
   useEffect(() => {
-    let dmode = localStorage.getItem("darkMode");
-
-    // if (dmode == undefined) {
-    //   dmode = false;
-    //   localStorage.setItem("darkMode", dmode);
-    // }
-    dmode === "false" ? setDarkMode(false) : setDarkMode(true);
+    const dmode = localStorage.getItem("darkMode");
+    setDarkMode(dmode === "true");
   }, []);
 
-  // useEffect(() => {
-  //   window["isUpdateAvailable"].then((isAvailable) => {
-  //     if (isAvailable) {
-  //       window.location.href = "/";
-  //     }
-  //   });
-  // }, []);
   const changeTheme = () => {
     localStorage.setItem("darkMode", !darkMode);
     setDarkMode(!darkMode);
   };
+
   const menu = [
     {
       title: 'Home',
@@ -97,8 +78,10 @@ function App() {
       icon: <HomeIcon />,
       component: Home,
     },
-  ]
-  const getComopnent = (C) => <C menu={menu.map(x => ({ ...x, component: null }))}></C>
+  ];
+
+  const getComopnent = (C) => <C menu={menu.map(x => ({ ...x, component: null }))}></C>;
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
